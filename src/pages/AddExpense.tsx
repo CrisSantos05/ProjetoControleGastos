@@ -156,28 +156,32 @@ export default function AddExpense() {
                     </button>
                 </div>
                 <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '8px' }}>
-                    {displayedCategories.map((cat) => (
-                        <button
-                            key={cat!.id}
-                            onClick={() => handleCategorySelect(cat!.id)}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                padding: '12px 20px',
-                                borderRadius: '16px',
-                                backgroundColor: selectedCategory === cat!.id ? cat!.color : '#1E1E1E',
-                                color: selectedCategory === cat!.id ? '#fff' : '#888',
-                                transition: 'all 0.2s',
-                                minWidth: 'max-content',
-                                border: 'none',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <cat!.icon size={18} />
-                            <span style={{ fontSize: '13px', fontWeight: 600 }}>{cat!.name}</span>
-                        </button>
-                    ))}
+                    {displayedCategories.map((cat) => {
+                        if (!cat) return null;
+                        const Icon = cat.icon;
+                        return (
+                            <button
+                                key={cat.id}
+                                onClick={() => handleCategorySelect(cat.id)}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    padding: '12px 20px',
+                                    borderRadius: '16px',
+                                    backgroundColor: selectedCategory === cat.id ? cat.color : '#1E1E1E',
+                                    color: selectedCategory === cat.id ? '#fff' : '#888',
+                                    transition: 'all 0.2s',
+                                    minWidth: 'max-content',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <Icon size={18} />
+                                <span style={{ fontSize: '13px', fontWeight: 600 }}>{cat.name}</span>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
