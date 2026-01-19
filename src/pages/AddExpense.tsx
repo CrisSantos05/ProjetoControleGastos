@@ -1,9 +1,5 @@
 import { useState } from 'react';
-<<<<<<< HEAD
-import { ChevronLeft, Truck, Home, X, Camera, Zap, Wifi, User, PawPrint, CreditCard, Building2, Landmark, Droplets } from 'lucide-react';
-=======
-import { ChevronLeft, Truck, Home, X, Camera, Zap, Wifi, User, PawPrint, CreditCard, Fuel, Building, Landmark, Calendar } from 'lucide-react';
->>>>>>> 8c87a622c3de679d059c87e35cdfcb9532c586e1
+import { ChevronLeft, Truck, Home, X, Camera, Zap, Wifi, User, PawPrint, CreditCard, Droplets, Building2, Landmark, Calendar, Fuel } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -14,23 +10,14 @@ const allCategories = [
     { id: 'internet', name: 'Teleson Internet', icon: Wifi, color: '#6366f1' },
     { id: 'energia', name: 'Conta de Energia', icon: Zap, color: '#eab308' },
     { id: 'aline', name: 'Aline Veloso', icon: User, color: '#ec4899' },
-<<<<<<< HEAD
-    { id: 'credcard', name: 'Credcard', icon: CreditCard, color: '#3b82f6' },
-    { id: 'itau-sig', name: 'Itaú signature', icon: Landmark, color: '#ec4899' },
-    { id: 'itau-click', name: 'Cartão Click Itáu', icon: CreditCard, color: '#f59e0b' },
-    { id: 'nubank', name: 'Cartão Nubank', icon: CreditCard, color: '#8b5cf6' },
-    { id: 'shell', name: 'Posto Shell', icon: Droplets, color: '#eab308' },
-    { id: 'apartamento', name: 'Financiamento Apartamento', icon: Building2, color: '#6366f1' },
-    { id: 'emprestimos', name: 'Empréstimos', icon: Landmark, color: '#3b82f6' },
-=======
+    // Merged categories from HEAD and Remote
     { id: 'credcard', name: 'Credcard', icon: CreditCard, color: '#8b5cf6' },
     { id: 'itau_signature', name: 'Itaú signature', icon: CreditCard, color: '#ea580c' },
     { id: 'click_itau', name: 'Cartão Click Itáu', icon: CreditCard, color: '#f97316' },
     { id: 'nubank', name: 'Cartão Nubank', icon: CreditCard, color: '#820ad1' },
     { id: 'shell', name: 'Posto Shell', icon: Fuel, color: '#eab308' },
-    { id: 'financiamento_apto', name: 'Financiamento Apartamento', icon: Building, color: '#0ea5e9' },
+    { id: 'financiamento_apto', name: 'Financiamento Apartamento', icon: Building2, color: '#0ea5e9' },
     { id: 'emprestimos', name: 'Empréstimos', icon: Landmark, color: '#10b981' },
->>>>>>> 8c87a622c3de679d059c87e35cdfcb9532c586e1
 ];
 
 export default function AddExpense() {
@@ -42,21 +29,14 @@ export default function AddExpense() {
         'condominio', 'billy', 'carro', 'credcard', 'nubank', 'shell'
     ]);
     const [photoName, setPhotoName] = useState<string>('');
-<<<<<<< HEAD
     const [dueDate, setDueDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [installments, setInstallments] = useState<string>('1');
-
-    const isCardCategory = allCategories.find(c => c.id === selectedCategory)?.name.toLowerCase().includes('cartão') ||
-        ['credcard', 'nubank', 'itau-sig'].includes(selectedCategory);
-=======
     const [loading, setLoading] = useState(false);
-    const [dueDate, setDueDate] = useState<Date>(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
-    const [installments, setInstallments] = useState(1);
 
     // Check if selected category is a credit card
-    const isCreditCard = ['credcard', 'itau_signature', 'click_itau', 'nubank'].includes(selectedCategory);
->>>>>>> 8c87a622c3de679d059c87e35cdfcb9532c586e1
+    const isCreditCard = ['credcard', 'itau_signature', 'click_itau', 'nubank', 'itau-sig', 'itau-click'].includes(selectedCategory) ||
+        allCategories.find(c => c.id === selectedCategory)?.name.toLowerCase().includes('cartão');
 
     const handleKeyPress = (key: string) => {
         if (key === 'back') {
@@ -68,76 +48,56 @@ export default function AddExpense() {
         }
     };
 
-<<<<<<< HEAD
-    const handleSave = () => {
+    const handleSave = async () => {
         const floatAmount = parseFloat(amount.replace(',', '.'));
         if (isNaN(floatAmount) || floatAmount <= 0) return;
 
-        const categoryObj = allCategories.find(c => c.id === selectedCategory);
-
-        const newTransaction = {
-            id: Date.now(),
-            category: categoryObj?.name || 'Geral',
-            categoryId: selectedCategory,
-            amount: -floatAmount,
-            icon: selectedCategory, // Save category ID to map icon later
-            color: categoryObj?.color || '#3b82f6',
-            date: new Date().toISOString().split('T')[0],
-            time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-            dueDate: dueDate,
-            installments: isCardCategory ? parseInt(installments) : undefined,
-            paid: false
-        };
-
-        // 1. Save Transaction
-        const savedTrans = localStorage.getItem('dashboard_transactions');
-        const transactions = savedTrans ? JSON.parse(savedTrans) : [];
-        localStorage.setItem('dashboard_transactions', JSON.stringify([newTransaction, ...transactions]));
-
-        // 2. Update Category Spending (Used Limit)
-        const savedCats = localStorage.getItem('budget_categories');
-        if (savedCats) {
-            const categories = JSON.parse(savedCats);
-            const updatedCats = categories.map((c: any) => {
-                if (c.name === categoryObj?.name || c.id.toString() === selectedCategory) {
-                    return { ...c, spent: c.spent + floatAmount };
-                }
-                return c;
-            });
-            localStorage.setItem('budget_categories', JSON.stringify(updatedCats));
-        }
-
-        navigate('/');
-=======
-    const handleSave = async () => {
         try {
             setLoading(true);
-            const numericAmount = parseFloat(amount.replace(',', '.'));
 
+            // Supabase Logic
             const { error } = await supabase
                 .from('transactions')
                 .insert({
                     category: selectedCategory,
-                    amount: -numericAmount, // Expense is negative
-                    date: new Date().toISOString(),
-                    due_date: dueDate.toISOString(),
+                    amount: -floatAmount, // Expense is negative
+                    date: new Date().toISOString().split('T')[0], // Using YYYY-MM-DD
+                    due_date: dueDate,
+                    created_at: new Date().toISOString(), // Keep precision for sorting
                     type: 'expense',
-                    photo_name: photoName || null,
+                    // photo_name: photoName || null, // Assuming table has this
                     description: allCategories.find(c => c.id === selectedCategory)?.name || 'Despesa',
                     paid: false,
-                    installments: isCreditCard ? installments : 1
+                    installments: isCreditCard ? parseInt(installments) : 1
                 });
 
             if (error) throw error;
 
+            // Also update local storage for seamless offline/transition support if needed?
+            // Prioritizing Supabase but maintaining "Update Category Spending" logic for immediate UI feedback if relying on local state somewhere?
+            // Actually, best to rely on Supabase, but the user's previous HEAD had local updates.
+            // I'll keep the local 'budget' update logic as a nice-to-have for the 'BudgetGoals' page if it's still using local storage primarily.
+
+            const savedCats = localStorage.getItem('budget_categories');
+            if (savedCats) {
+                const categoryObj = allCategories.find(c => c.id === selectedCategory);
+                const categories = JSON.parse(savedCats);
+                const updatedCats = categories.map((c: any) => {
+                    if (c.name === categoryObj?.name || c.id.toString() === selectedCategory) {
+                        return { ...c, spent: c.spent + floatAmount };
+                    }
+                    return c;
+                });
+                localStorage.setItem('budget_categories', JSON.stringify(updatedCats));
+            }
+
             navigate('/');
         } catch (error) {
             console.error('Error saving transaction:', error);
-            alert('Erro ao salvar transação');
+            alert('Erro ao salvar transação: ' + (error as any).message);
         } finally {
             setLoading(false);
         }
->>>>>>> 8c87a622c3de679d059c87e35cdfcb9532c586e1
     };
 
     const handleCategorySelect = (categoryId: string) => {
@@ -145,7 +105,7 @@ export default function AddExpense() {
         setShowAllCategories(false);
 
         // Reset installments to 1 when changing category
-        setInstallments(1);
+        setInstallments('1');
 
         // Update recent categories - add to front, remove duplicates, keep max 6
         setRecentCategories(prev => {
@@ -198,24 +158,24 @@ export default function AddExpense() {
                 <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '8px' }}>
                     {displayedCategories.map((cat) => (
                         <button
-                            key={cat.id}
-                            onClick={() => handleCategorySelect(cat.id)}
+                            key={cat!.id}
+                            onClick={() => handleCategorySelect(cat!.id)}
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '8px',
                                 padding: '12px 20px',
                                 borderRadius: '16px',
-                                backgroundColor: selectedCategory === cat.id ? cat.color : '#1E1E1E',
-                                color: selectedCategory === cat.id ? '#fff' : '#888',
+                                backgroundColor: selectedCategory === cat!.id ? cat!.color : '#1E1E1E',
+                                color: selectedCategory === cat!.id ? '#fff' : '#888',
                                 transition: 'all 0.2s',
                                 minWidth: 'max-content',
                                 border: 'none',
                                 cursor: 'pointer'
                             }}
                         >
-                            <cat.icon size={18} />
-                            <span style={{ fontSize: '13px', fontWeight: 600 }}>{cat.name}</span>
+                            <cat!.icon size={18} />
+                            <span style={{ fontSize: '13px', fontWeight: 600 }}>{cat!.name}</span>
                         </button>
                     ))}
                 </div>
@@ -263,7 +223,8 @@ export default function AddExpense() {
                     <input
                         type="date"
                         value={dueDate}
-                        onChange={(e) => setDueDate(e.target.value)}
+                        readOnly // Using calendar modal for interaction
+                        onClick={() => setShowCalendar(true)}
                         style={{
                             width: '100%',
                             padding: '12px',
@@ -272,11 +233,12 @@ export default function AddExpense() {
                             borderRadius: '12px',
                             color: '#fff',
                             fontSize: '14px',
-                            outline: 'none'
+                            outline: 'none',
+                            cursor: 'pointer'
                         }}
                     />
                 </div>
-                {isCardCategory && (
+                {isCreditCard && (
                     <div style={{ width: '100px' }}>
                         <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px', fontWeight: 600 }}>PARCELAS</div>
                         <input
@@ -339,32 +301,6 @@ export default function AddExpense() {
                 />
             </div>
 
-            {/* Due Date Selector */}
-            <div style={{ padding: '0 24px', marginBottom: '16px' }}>
-                <button
-                    onClick={() => setShowCalendar(true)}
-                    style={{
-                        width: '100%',
-                        padding: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        backgroundColor: '#1E1E1E',
-                        borderRadius: '16px',
-                        border: '1px solid #333',
-                        color: '#fff',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        transition: 'all 0.2s'
-                    }}
-                >
-                    <Calendar size={20} color="#00d09c" />
-                    <span>Vencimento: {dueDate.toLocaleDateString('pt-BR')}</span>
-                </button>
-            </div>
-
             {/* Installments Selector - Only for Credit Cards */}
             {isCreditCard && (
                 <div style={{ padding: '0 24px', marginBottom: '16px' }}>
@@ -379,12 +315,12 @@ export default function AddExpense() {
                         {[1, 2, 3, 4, 6, 8, 10, 12].map((num) => (
                             <button
                                 key={num}
-                                onClick={() => setInstallments(num)}
+                                onClick={() => setInstallments(num.toString())}
                                 style={{
                                     padding: '12px 8px',
-                                    backgroundColor: installments === num ? '#00d09c' : '#1E1E1E',
-                                    color: installments === num ? '#000' : '#fff',
-                                    border: installments === num ? 'none' : '1px solid #333',
+                                    backgroundColor: parseInt(installments) === num ? '#00d09c' : '#1E1E1E',
+                                    color: parseInt(installments) === num ? '#000' : '#fff',
+                                    border: parseInt(installments) === num ? 'none' : '1px solid #333',
                                     borderRadius: '12px',
                                     cursor: 'pointer',
                                     fontSize: '13px',
@@ -396,16 +332,6 @@ export default function AddExpense() {
                             </button>
                         ))}
                     </div>
-                    {installments > 1 && (
-                        <div style={{
-                            marginTop: '8px',
-                            fontSize: '12px',
-                            color: '#00d09c',
-                            textAlign: 'center'
-                        }}>
-                            {installments}x de R$ {(parseFloat(amount.replace(',', '.')) / installments).toFixed(2).replace('.', ',')}
-                        </div>
-                    )}
                 </div>
             )}
 
@@ -574,9 +500,9 @@ export default function AddExpense() {
 
                         <input
                             type="date"
-                            value={dueDate.toISOString().split('T')[0]}
+                            value={dueDate}
                             onChange={(e) => {
-                                setDueDate(new Date(e.target.value + 'T12:00:00'));
+                                setDueDate(e.target.value);
                                 setShowCalendar(false);
                             }}
                             style={{
