@@ -228,13 +228,7 @@ export default function Analytics() {
                 <div style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>
                     R$ {totalSpent.toFixed(2).replace('.', ',')}
                 </div>
-<<<<<<< HEAD
-                <div style={{ color: '#666', fontSize: '12px' }}>
-                    {new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })} - {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </div>
-=======
                 <div style={{ color: '#666', fontSize: '12px' }}>{dateRange}</div>
->>>>>>> 8c87a622c3de679d059c87e35cdfcb9532c586e1
             </div>
 
             {/* Chart */}
@@ -244,12 +238,7 @@ export default function Analytics() {
                         <Tooltip
                             cursor={{ fill: 'transparent' }}
                             contentStyle={{ backgroundColor: '#1E1E1E', border: 'none', borderRadius: '12px', color: '#fff' }}
-<<<<<<< HEAD
-                            formatter={(value: any) => [`R$ ${value}`, 'Valor']}
-=======
-                            // @ts-ignore
-                            formatter={(value: any) => [`R$ ${value.toFixed(2).replace('.', ',')}`, 'Valor']}
->>>>>>> 8c87a622c3de679d059c87e35cdfcb9532c586e1
+                            formatter={(value: any) => [`R$ ${typeof value === 'number' ? value.toFixed(2).replace('.', ',') : value}`, 'Valor']}
                         />
                         <XAxis
                             dataKey="name"
