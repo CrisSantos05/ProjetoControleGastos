@@ -194,8 +194,8 @@ export default function Dashboard() {
     };
 
     const filteredTransactions = transactions.filter((t: Transaction) => {
-        const tDate = new Date(t.date);
-        return tDate.getMonth() === selectedMonth.getMonth() && tDate.getFullYear() === selectedMonth.getFullYear();
+        const targetDate = new Date(t.dueDate || t.date);
+        return targetDate.getMonth() === selectedMonth.getMonth() && targetDate.getFullYear() === selectedMonth.getFullYear();
     });
 
     const totalExpense = filteredTransactions.filter((t: Transaction) => t.amount < 0).reduce((sum: number, t: Transaction) => sum + t.amount, 0);
@@ -203,15 +203,6 @@ export default function Dashboard() {
     const changeMonth = (delta: number) => {
         const newDate = new Date(selectedMonth);
         newDate.setMonth(newDate.getMonth() + delta);
-
-        const now = new Date();
-        // Prevent navigating to future months relative to "today" context (can't see inside next month until it starts)
-        // Check if newDate year/month is greater than current
-        if (newDate.getFullYear() > now.getFullYear() ||
-            (newDate.getFullYear() === now.getFullYear() && newDate.getMonth() > now.getMonth())) {
-            return;
-        }
-
         setSelectedMonth(newDate);
     };
 
@@ -396,7 +387,7 @@ export default function Dashboard() {
                         padding: '24px'
                     }}>
                         <div style={{
-                            backgroundColor: '#050505',
+                            backgroundColor: '#FFFFFF',
                             borderRadius: '24px',
                             padding: '24px',
                             maxWidth: '480px',
@@ -413,7 +404,7 @@ export default function Dashboard() {
                                         width: '40px',
                                         height: '40px',
                                         borderRadius: '50%',
-                                        backgroundColor: '#1E1E1E',
+                                        backgroundColor: '#F3F4F6',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -421,7 +412,7 @@ export default function Dashboard() {
                                         cursor: 'pointer'
                                     }}
                                 >
-                                    <X size={20} color="#fff" />
+                                    <X size={20} color="#1F2937" />
                                 </button>
                             </div>
 
@@ -433,7 +424,7 @@ export default function Dashboard() {
                                         width: '36px',
                                         height: '36px',
                                         borderRadius: '50%',
-                                        backgroundColor: '#1E1E1E',
+                                        backgroundColor: '#F3F4F6',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -441,28 +432,26 @@ export default function Dashboard() {
                                         cursor: 'pointer'
                                     }}
                                 >
-                                    <ChevronLeft size={20} color="#888" />
+                                    <ChevronLeft size={20} color="#6B7280" />
                                 </button>
                                 <span style={{ fontSize: '16px', fontWeight: 600 }}>
                                     {monthNames[selectedMonth.getMonth()]} {selectedMonth.getFullYear()}
                                 </span>
                                 <button
                                     onClick={() => changeMonth(1)}
-                                    disabled={isCurrentMonth()}
                                     style={{
                                         width: '36px',
                                         height: '36px',
                                         borderRadius: '50%',
-                                        backgroundColor: isCurrentMonth() ? '#111' : '#1E1E1E',
+                                        backgroundColor: '#F3F4F6',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         border: 'none',
-                                        cursor: isCurrentMonth() ? 'not-allowed' : 'pointer',
-                                        opacity: isCurrentMonth() ? 0.5 : 1
+                                        cursor: 'pointer'
                                     }}
                                 >
-                                    <ChevronRight size={20} color="#888" />
+                                    <ChevronRight size={20} color="#6B7280" />
                                 </button>
                             </div>
 
@@ -495,7 +484,7 @@ export default function Dashboard() {
                                             style={{
                                                 padding: '8px',
                                                 borderRadius: '12px',
-                                                backgroundColor: isToday ? '#00d09c20' : (hasTransactions ? '#1E1E1E' : 'transparent'),
+                                                backgroundColor: isToday ? '#00d09c20' : (hasTransactions ? '#F3F4F6' : 'transparent'),
                                                 border: isToday ? '1px solid #00d09c' : 'none',
                                                 display: 'flex',
                                                 flexDirection: 'column',
