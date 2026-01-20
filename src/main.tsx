@@ -7,7 +7,7 @@ import App from './App.tsx'
 registerSW({ immediate: true })
 
 // Version logging for deployment verification
-console.log('🚀 Controle de Gastos v2.0.1 - Build: 2026-01-20T09:45:00');
+console.log('🚀 Controle de Gastos v3.1 - Build: 2026-01-20T10:07:00');
 console.log('📅 Deployed at:', new Date().toISOString());
 
 createRoot(document.getElementById('root')!).render(
