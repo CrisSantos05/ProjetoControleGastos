@@ -284,98 +284,99 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* Filters */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', overflowX: 'auto', paddingBottom: '4px' }}>
-                {['Hoje', 'Ontem', 'Esta Semana'].map((f) => (
-                    <button
-                        key={f}
-                        onClick={() => setFilter(f)}
-                        style={{
-                            padding: '8px 20px',
-                            borderRadius: '20px',
-                            backgroundColor: filter === f ? '#00d09c' : '#1E1E1E',
-                            color: filter === f ? '#000' : '#888',
-                            fontWeight: 600,
-                            fontSize: '13px',
-                            border: filter === f ? 'none' : '1px solid #333',
-                            transition: 'all 0.2s',
-                            whiteSpace: 'nowrap',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        {f}
-                    </button>
-                ))}
+            {/* Filters - MONTH ONLY */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '24px' }}>
                 <button
                     onClick={() => setShowCalendar(true)}
-                    style={{ padding: '8px', borderRadius: '12px', backgroundColor: '#1E1E1E', border: '1px solid #333', cursor: 'pointer' }}
+                    style={{
+                        padding: '8px 16px',
+                        borderRadius: '12px',
+                        backgroundColor: '#1E1E1E',
+                        border: '1px solid #333',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        color: '#fff',
+                        fontSize: '13px',
+                        fontWeight: 600
+                    }}
                 >
                     <Calendar size={18} color="#888" />
+                    {monthNames[selectedMonth.getMonth()]}
                 </button>
             </div>
 
             {/* Transaction List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ color: '#666', fontSize: '12px', fontWeight: 600, marginBottom: '4px' }}>
-                    {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'short' }).toUpperCase()}
-                </div>
 
                 {loading ? (
                     <div style={{ color: '#fff', textAlign: 'center', padding: '20px' }}>Carregando...</div>
-                ) : filteredTransactions.map((t: Transaction) => (
-                    <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: '#1E1E1E', borderRadius: '20px', marginBottom: '12px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                ) : filteredTransactions.map((t: Transaction) => {
+                    const dueDateObj = new Date(t.dueDate || t.date);
+                    const formattedDueDate = `${String(dueDateObj.getDate()).padStart(2, '0')}/${String(dueDateObj.getMonth() + 1).padStart(2, '0')}`;
+
+                    return (
+                        <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: '#1E1E1E', borderRadius: '20px', marginBottom: '12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                <div style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '16px',
+                                    backgroundColor: `${t.color}20`,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    {(() => {
+                                        const IconComp = getIcon(t.icon);
+                                        return <IconComp size={24} color={t.color} />;
+                                    })()}
+                                </div>
+                                <div>
+                                    <div style={{ fontWeight: 600, fontSize: '15px', color: '#fff', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        {t.category}
+                                    </div>
+
+                                    {/* Due Date and Details */}
+                                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '4px', fontWeight: 500 }}>
+                                        Vencimento: {formattedDueDate} • {t.time}
+                                    </div>
+
+                                    {/* Status and Actions */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px' }}>
+                                        <span style={{
+                                            color: t.paid ? '#00d09c' : '#ef4444',
+                                            backgroundColor: t.paid ? '#00d09c20' : '#ef444420',
+                                            padding: '2px 6px',
+                                            borderRadius: '4px',
+                                            fontWeight: 700
+                                        }}>
+                                            {t.paid ? 'PAGO' : 'PENDENTE'}
+                                        </span>
+
+                                        {!t.paid && t.amount < 0 && (
+                                            <button
+                                                onClick={() => handleMarkAsPaid(t.id)}
+                                                style={{ background: 'none', border: 'none', color: '#00d09c', fontWeight: 700, cursor: 'pointer', padding: 0, marginLeft: '8px' }}
+                                            >
+                                                PAGAR AGORA
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                             <div style={{
-                                width: '48px',
-                                height: '48px',
-                                borderRadius: '16px',
-                                backgroundColor: `${t.color}20`,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
+                                fontWeight: 700,
+                                fontSize: '15px',
+                                color: t.paid ? '#666' : (t.amount > 0 ? '#00d09c' : '#fff'),
+                                textDecoration: t.paid ? 'line-through' : 'none'
                             }}>
-                                {(() => {
-                                    const IconComp = getIcon(t.icon);
-                                    return <IconComp size={24} color={t.color} />;
-                                })()}
-                            </div>
-                            <div>
-                                <div style={{ fontWeight: 600, fontSize: '15px', color: '#fff', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    {t.category}
-                                    {getDueDateLabel(t.dueDate) && (
-                                        <span style={{ fontSize: '10px', backgroundColor: '#ef444420', color: '#ef4444', padding: '2px 6px', borderRadius: '4px' }}>
-                                            {getDueDateLabel(t.dueDate)}
-                                        </span>
-                                    )}
-                                </div>
-                                <div style={{ color: '#666', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    {t.time} • {(t as any).installments ? `${(t as any).installments}x • ` : ''}
-                                    {!t.paid && t.amount < 0 && (
-                                        <button
-                                            onClick={() => handleMarkAsPaid(t.id)}
-                                            style={{ background: 'none', border: 'none', color: '#00d09c', fontSize: '11px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
-                                        >
-                                            PAGAR
-                                        </button>
-                                    )}
-                                    {t.paid && (
-                                        <span style={{ color: '#00d09c', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            PAGO <Check size={12} />
-                                        </span>
-                                    )}
-                                </div>
+                                {t.amount > 0 ? '+' : ''} R$ {Math.abs(t.amount).toFixed(2).replace('.', ',')}
                             </div>
                         </div>
-                        <div style={{
-                            fontWeight: 700,
-                            fontSize: '15px',
-                            color: t.paid ? '#666' : (t.amount > 0 ? '#00d09c' : '#fff'),
-                            textDecoration: t.paid ? 'line-through' : 'none'
-                        }}>
-                            {t.amount > 0 ? '+' : ''} R$ {Math.abs(t.amount).toFixed(2).replace('.', ',')}
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             {/* Calendar Modal */}
