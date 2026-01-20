@@ -14,7 +14,7 @@ export default defineConfig({
         short_name: 'Gastos',
         description: 'Gerenciador de despesas pessoal premium',
         theme_color: '#00d09c',
-        background_color: '#000000',
+        background_color: '#FFFFFF',
         display: 'standalone',
         start_url: '/',
         scope: '/',
