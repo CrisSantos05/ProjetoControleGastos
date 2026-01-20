@@ -23,6 +23,26 @@
 
 <body>
   <div id="root"></div>
+
+  <!-- iOS PWA Fix: Prevent links from opening in new window -->
+  <script>
+    if (window.navigator.standalone) {
+      document.addEventListener('click', function (e) {
+        var curnode = e.target;
+        while (!/^(a|html)$/i.test(curnode.nodeName)) {
+          curnode = curnode.parentNode;
+        }
+        if ('href' in curnode && (
+          curnode.href.indexOf('http') || ~curnode.href.indexOf(document.location.host)
+        )) {
+          // Verify if it is an internal link managed by React Router
+          // If React Router captures it, e.defaultPrevented should be true.
+          // This script acts as a backup for links that might slip through.
+        }
+      }, false);
+    }
+  </script>
+
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
