@@ -174,9 +174,19 @@ export default function BillReminders() {
                                 <div style={{ fontWeight: 700, fontSize: '16px' }}>R$ {bill.amount.toFixed(2).replace('.', ',')}</div>
                                 <button
                                     onClick={() => handleEditStart(bill)}
-                                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', opacity: 0.6 }}
+                                    style={{
+                                        background: '#333',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        padding: '8px',
+                                        borderRadius: '8px',
+                                        marginLeft: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
                                 >
-                                    <Pencil size={14} color="#fff" />
+                                    <Pencil size={16} color="#00d09c" />
                                 </button>
                             </div>
                         )}
