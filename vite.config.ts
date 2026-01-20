@@ -11,7 +11,7 @@ export default defineConfig({
       includeAssets: ['vite.svg', 'wallet.svg', 'apple-touch-icon-v2.png'],
       manifest: {
         name: 'Controle de Gastos',
-        short_name: 'Gastos',
+        short_name: 'Gastos v3.1',
         description: 'Gerenciador de despesas pessoal premium',
         theme_color: '#00d09c',
         background_color: '#FFFFFF',
