@@ -1,12 +1,12 @@
 :root {
-  --bg-primary: #050505;
-  --bg-secondary: #121212;
-  --bg-card: #1E1E1E;
-  --bg-accent: #2A2A2A;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-card: #F3F4F6;
+  --bg-accent: #E5E7EB;
 
-  --text-primary: #FFFFFF;
-  --text-secondary: #A0A0A0;
-  --text-muted: #666666;
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
 
   --accent-green: #00D09C;
   /* For positive/income/active */

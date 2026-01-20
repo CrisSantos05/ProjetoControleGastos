@@ -252,18 +252,18 @@ export default function Dashboard() {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span style={{ fontSize: '14px' }}>👤</span>
                     </div>
-                    <span style={{ fontWeight: 600 }}>Transações <span style={{ color: '#ef4444', fontSize: '12px' }}>v3.0</span></span>
+                    <span style={{ fontWeight: 600, color: '#1F2937' }}>Transações <span style={{ color: '#ef4444', fontSize: '12px' }}>v3.0</span></span>
                 </div>
                 <button
                     onClick={loadTransactions}
-                    style={{ marginRight: '8px', padding: '8px', backgroundColor: '#1E1E1E', borderRadius: '12px', border: 'none', cursor: 'pointer', color: '#00d09c', fontSize: '10px' }}>
+                    style={{ marginRight: '8px', padding: '8px', backgroundColor: '#F3F4F6', borderRadius: '12px', border: 'none', cursor: 'pointer', color: '#00d09c', fontSize: '10px' }}>
                     🔄 Atualizar
                 </button>
-                <button style={{ padding: '8px', backgroundColor: '#1E1E1E', borderRadius: '12px', border: 'none', cursor: 'pointer' }}>
-                    <Bell size={20} color="#fff" />
+                <button style={{ padding: '8px', backgroundColor: '#F3F4F6', borderRadius: '12px', border: 'none', cursor: 'pointer' }}>
+                    <Bell size={20} color="#1F2937" />
                 </button>
             </div>
 
@@ -291,18 +291,18 @@ export default function Dashboard() {
                     style={{
                         padding: '8px 16px',
                         borderRadius: '12px',
-                        backgroundColor: '#1E1E1E',
-                        border: '1px solid #333',
+                        backgroundColor: '#F3F4F6',
+                        border: '1px solid #E5E7EB',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        color: '#fff',
+                        color: '#1F2937',
                         fontSize: '13px',
                         fontWeight: 600
                     }}
                 >
-                    <Calendar size={18} color="#888" />
+                    <Calendar size={18} color="#6B7280" />
                     {monthNames[selectedMonth.getMonth()]}
                 </button>
             </div>
@@ -311,13 +311,13 @@ export default function Dashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
                 {loading ? (
-                    <div style={{ color: '#fff', textAlign: 'center', padding: '20px' }}>Carregando...</div>
+                    <div style={{ color: '#1F2937', textAlign: 'center', padding: '20px' }}>Carregando...</div>
                 ) : filteredTransactions.map((t: Transaction) => {
                     const dueDateObj = new Date(t.dueDate || t.date);
                     const formattedDueDate = `${String(dueDateObj.getDate()).padStart(2, '0')}/${String(dueDateObj.getMonth() + 1).padStart(2, '0')}`;
 
                     return (
-                        <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: '#1E1E1E', borderRadius: '20px', marginBottom: '12px' }}>
+                        <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: '#F3F4F6', borderRadius: '20px', marginBottom: '12px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                                 <div style={{
                                     width: '48px',
@@ -334,12 +334,12 @@ export default function Dashboard() {
                                     })()}
                                 </div>
                                 <div>
-                                    <div style={{ fontWeight: 600, fontSize: '15px', color: '#fff', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '15px', color: '#1F2937', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         {t.category}
                                     </div>
 
                                     {/* Due Date and Details */}
-                                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '4px', fontWeight: 500 }}>
+                                    <div style={{ color: '#6B7280', fontSize: '12px', marginBottom: '4px', fontWeight: 500 }}>
                                         Vencimento: {formattedDueDate} • {t.time}
                                     </div>
 
@@ -369,7 +369,7 @@ export default function Dashboard() {
                             <div style={{
                                 fontWeight: 700,
                                 fontSize: '15px',
-                                color: t.paid ? '#666' : (t.amount > 0 ? '#00d09c' : '#fff'),
+                                color: t.paid ? '#9CA3AF' : (t.amount > 0 ? '#00d09c' : '#1F2937'),
                                 textDecoration: t.paid ? 'line-through' : 'none'
                             }}>
                                 {t.amount > 0 ? '+' : ''} R$ {Math.abs(t.amount).toFixed(2).replace('.', ',')}

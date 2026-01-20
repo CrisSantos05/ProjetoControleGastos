@@ -7,12 +7,12 @@ export default function Navigation() {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: '#16181a',
+        backgroundColor: '#FFFFFF',
         padding: '12px 24px 24px 24px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderTop: '1px solid #1E1E1E',
+        borderTop: '1px solid #E5E7EB',
         zIndex: 100,
         maxWidth: '480px', // Mobile constraint
         margin: '0 auto',
@@ -23,7 +23,7 @@ export default function Navigation() {
         flexDirection: 'column' as const,
         alignItems: 'center',
         gap: '4px',
-        color: isActive ? '#00d09c' : '#666',
+        color: isActive ? '#00d09c' : '#6B7280',
         textDecoration: 'none',
         fontSize: '10px',
         fontWeight: 600

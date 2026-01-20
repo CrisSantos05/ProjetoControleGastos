@@ -130,19 +130,19 @@ export default function BillReminders() {
         const isPaid = isPaidThisMonth(bill);
 
         return (
-            <div key={bill.id} style={{ backgroundColor: '#1E1E1E', borderRadius: '24px', padding: '20px', opacity: isPaid ? 0.6 : 1 }}>
+            <div key={bill.id} style={{ backgroundColor: '#F3F4F6', borderRadius: '24px', padding: '20px', opacity: isPaid ? 0.6 : 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                         <div style={{
                             width: '48px',
                             height: '48px',
                             borderRadius: '16px',
-                            backgroundColor: bill.dueSoon ? '#162e2e' : '#2A2A2A',
+                            backgroundColor: bill.dueSoon ? '#D1FAE5' : '#E5E7EB',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}>
-                            <bill.icon size={24} color={bill.dueSoon ? "#00d09c" : "#888"} />
+                            <bill.icon size={24} color={bill.dueSoon ? "#059669" : "#6B7280"} />
                         </div>
                         <div>
                             <div style={{ fontWeight: 700, fontSize: '15px' }}>{bill.name}</div>
@@ -160,10 +160,10 @@ export default function BillReminders() {
                                     onChange={(e) => setEditValue(e.target.value)}
                                     style={{
                                         width: '80px',
-                                        backgroundColor: '#333',
-                                        border: '1px solid #444',
+                                        backgroundColor: '#E5E7EB',
+                                        border: '1px solid #D1D5DB',
                                         borderRadius: '8px',
-                                        color: '#fff',
+                                        color: '#1F2937',
                                         padding: '4px 8px',
                                         fontSize: '14px'
                                     }}
@@ -185,7 +185,7 @@ export default function BillReminders() {
                                     <button
                                         onClick={() => handleEditStart(bill)}
                                         style={{
-                                            background: '#333',
+                                            background: '#E5E7EB',
                                             border: 'none',
                                             cursor: 'pointer',
                                             padding: '8px',
@@ -205,7 +205,7 @@ export default function BillReminders() {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: bill.dueSoon ? '#f59e0b' : '#666', fontSize: '11px', fontWeight: bill.dueSoon ? 700 : 600 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: bill.dueSoon ? '#d97706' : '#6B7280', fontSize: '11px', fontWeight: bill.dueSoon ? 700 : 600 }}>
                         <span style={{ fontSize: '14px' }}>{bill.dueSoon ? '⏰' : '📅'}</span>
                         {bill.dueText}
                     </div>
@@ -227,8 +227,8 @@ export default function BillReminders() {
                         <button
                             onClick={() => handleMarkAsPaid(bill.id)}
                             style={{
-                                backgroundColor: bill.dueSoon ? '#00d09c' : '#2A2A2A',
-                                color: bill.dueSoon ? '#053d2e' : '#888',
+                                backgroundColor: bill.dueSoon ? '#00d09c' : '#E5E7EB',
+                                color: bill.dueSoon ? '#ffffff' : '#4B5563',
                                 fontWeight: bill.dueSoon ? 700 : 600,
                                 fontSize: '12px',
                                 padding: '10px 20px',
@@ -257,8 +257,8 @@ export default function BillReminders() {
                     <span style={{ fontWeight: 700, fontSize: '18px' }}>Lembretes de Contas</span>
                 </div>
                 <div style={{ display: 'flex', gap: '12px' }}>
-                    <button style={{ backgroundColor: '#1E1E1E', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
-                        <Calendar size={20} color="#888" />
+                    <button style={{ backgroundColor: '#F3F4F6', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
+                        <Calendar size={20} color="#6B7280" />
                     </button>
                     <button style={{ backgroundColor: '#00d09c', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
                         <Plus size={20} color="#000" />
@@ -277,8 +277,8 @@ export default function BillReminders() {
                             flexDirection: 'column',
                             alignItems: 'center',
                             cursor: 'pointer',
-                            backgroundColor: item.date === selectedDay ? '#00d09c' : '#1E1E1E',
-                            color: item.date === selectedDay ? '#000' : '#888',
+                            backgroundColor: item.date === selectedDay ? '#00d09c' : '#F3F4F6',
+                            color: item.date === selectedDay ? '#FFFFFF' : '#6B7280',
                             padding: '12px 0',
                             width: '56px',
                             borderRadius: '24px',
