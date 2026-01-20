@@ -111,19 +111,26 @@ export default function BillReminders() {
         setEditingId(null);
     };
 
+    const getCurrentMonthKey = () => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    };
+
+    const isPaidThisMonth = (bill: any) => {
+        return bill.lastPaidMonth === getCurrentMonthKey();
+    };
+
     const handleMarkAsPaid = (id: number) => {
-        // Just a visual toggle for now or removal? 
-        // For recurring bills, usually you don't delete them, maybe just mark as paid for this month?
-        // Implementing simple console log for now as requested feature was just "Edit Values"
-        console.log('Mark as paid', id);
-        alert('Conta marcada como paga! (Simulação)');
+        const monthKey = getCurrentMonthKey();
+        setBills((prev: any[]) => prev.map(b => b.id === id ? { ...b, lastPaidMonth: monthKey } : b));
     };
 
     const renderBillCard = (bill: any) => {
         const isEditing = editingId === bill.id;
+        const isPaid = isPaidThisMonth(bill);
 
         return (
-            <div key={bill.id} style={{ backgroundColor: '#1E1E1E', borderRadius: '24px', padding: '20px' }}>
+            <div key={bill.id} style={{ backgroundColor: '#1E1E1E', borderRadius: '24px', padding: '20px', opacity: isPaid ? 0.6 : 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                         <div style={{
@@ -171,23 +178,27 @@ export default function BillReminders() {
                             </div>
                         ) : (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <div style={{ fontWeight: 700, fontSize: '16px' }}>R$ {bill.amount.toFixed(2).replace('.', ',')}</div>
-                                <button
-                                    onClick={() => handleEditStart(bill)}
-                                    style={{
-                                        background: '#333',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        padding: '8px',
-                                        borderRadius: '8px',
-                                        marginLeft: '8px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
-                                >
-                                    <Pencil size={16} color="#00d09c" />
-                                </button>
+                                <div style={{ fontWeight: 700, fontSize: '16px', textDecoration: isPaid ? 'line-through' : 'none' }}>
+                                    R$ {bill.amount.toFixed(2).replace('.', ',')}
+                                </div>
+                                {!isPaid && (
+                                    <button
+                                        onClick={() => handleEditStart(bill)}
+                                        style={{
+                                            background: '#333',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            padding: '8px',
+                                            borderRadius: '8px',
+                                            marginLeft: '8px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        <Pencil size={16} color="#00d09c" />
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>
@@ -198,21 +209,37 @@ export default function BillReminders() {
                         <span style={{ fontSize: '14px' }}>{bill.dueSoon ? '⏰' : '📅'}</span>
                         {bill.dueText}
                     </div>
-                    <button
-                        onClick={() => handleMarkAsPaid(bill.id)}
-                        style={{
-                            backgroundColor: bill.dueSoon ? '#00d09c' : '#2A2A2A',
-                            color: bill.dueSoon ? '#053d2e' : '#888',
-                            fontWeight: bill.dueSoon ? 700 : 600,
+                    {isPaid ? (
+                        <div style={{
+                            color: '#00d09c',
+                            fontWeight: 700,
                             fontSize: '12px',
-                            padding: '10px 20px',
-                            borderRadius: '12px',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Marcar como Pago
-                    </button>
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            backgroundColor: '#00d09c20',
+                            padding: '8px 16px',
+                            borderRadius: '12px'
+                        }}>
+                            PAGO <CheckCircle size={14} />
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => handleMarkAsPaid(bill.id)}
+                            style={{
+                                backgroundColor: bill.dueSoon ? '#00d09c' : '#2A2A2A',
+                                color: bill.dueSoon ? '#053d2e' : '#888',
+                                fontWeight: bill.dueSoon ? 700 : 600,
+                                fontSize: '12px',
+                                padding: '10px 20px',
+                                borderRadius: '12px',
+                                border: 'none',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Marcar como Pago
+                        </button>
+                    )}
                 </div>
             </div>
         );
@@ -274,29 +301,39 @@ export default function BillReminders() {
                 ))}
             </div>
 
-            {/* Due Tomorrow Section */}
+            {/* Due Tomorrow / Soon Section (Unpaid Only) */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '1px', color: '#888' }}>VENCE AMANHÃ</span>
                 <span style={{ fontSize: '10px', color: '#f59e0b', backgroundColor: '#f59e0b20', padding: '4px 8px', borderRadius: '6px', fontWeight: 600 }}>Ação Necessária</span>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
-                {bills.filter((b: any) => b.dueSoon).map(renderBillCard)}
+                {bills.filter((b: any) => b.dueSoon && !isPaidThisMonth(b)).map(renderBillCard)}
+                {bills.filter((b: any) => b.dueSoon && !isPaidThisMonth(b)).length === 0 && (
+                    <div style={{ color: '#666', fontSize: '13px', textAlign: 'center', padding: '20px' }}>Nenhuma conta urgente!</div>
+                )}
             </div>
 
-            {/* In 3 Days Section */}
+            {/* Upcoming Section (Unpaid Only) */}
             <div style={{ marginBottom: '16px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '1px', color: '#888' }}>EM 3 DIAS</span>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
-                {bills.filter((b: any) => !b.dueSoon).map(renderBillCard)}
+                {bills.filter((b: any) => !b.dueSoon && !isPaidThisMonth(b)).map(renderBillCard)}
+                {bills.filter((b: any) => !b.dueSoon && !isPaidThisMonth(b)).length === 0 && (
+                    <div style={{ color: '#666', fontSize: '13px', textAlign: 'center', padding: '20px' }}>Tudo em dia por aqui.</div>
+                )}
             </div>
 
-            {/* Already Paid Section Header */}
+            {/* Already Paid Section (Paid Only) */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '1px', color: '#888' }}>JÁ PAGO</span>
                 <CheckCircle size={16} color="#4b5563" />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+                {bills.filter((b: any) => isPaidThisMonth(b)).map(renderBillCard)}
             </div>
 
 
@@ -318,7 +355,9 @@ export default function BillReminders() {
                 zIndex: 50
             }}>
                 <span style={{ color: '#053d2e', fontWeight: 700, fontSize: '12px' }}>TOTAL A VENCER NA SEMANA</span>
-                <span style={{ color: '#fff', fontWeight: 800, fontSize: '18px' }}>R$ 2.332,49</span>
+                <span style={{ color: '#fff', fontWeight: 800, fontSize: '18px' }}>
+                    R$ {bills.filter((b: any) => !isPaidThisMonth(b)).reduce((acc: number, curr: any) => acc + curr.amount, 0).toFixed(2).replace('.', ',')}
+                </span>
             </div>
 
         </div>

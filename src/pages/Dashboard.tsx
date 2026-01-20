@@ -156,12 +156,6 @@ export default function Dashboard() {
 
             if (error) throw error;
 
-            // Also update budget goals if applicable? 
-            // Depending on how budget goals are stored (Supabase vs Local), this part is tricky.
-            // If BudgetGoals are local-only (as per HEAD), we might need to sync them here too if we want to keep that feature responsive.
-            // But ideally BudgetGoals should also be in Supabase.
-            // For now, I'll replicate the local storage logic for BudgetGoals just in case
-
             const trans = transactions.find(t => t.id === id);
             if (trans) {
                 const savedCats = localStorage.getItem('budget_categories');
@@ -209,7 +203,22 @@ export default function Dashboard() {
     const changeMonth = (delta: number) => {
         const newDate = new Date(selectedMonth);
         newDate.setMonth(newDate.getMonth() + delta);
+
+        const now = new Date();
+        // Prevent navigating to future months relative to "today" context (can't see inside next month until it starts)
+        // Check if newDate year/month is greater than current
+        if (newDate.getFullYear() > now.getFullYear() ||
+            (newDate.getFullYear() === now.getFullYear() && newDate.getMonth() > now.getMonth())) {
+            return;
+        }
+
         setSelectedMonth(newDate);
+    };
+
+    const isCurrentMonth = () => {
+        const now = new Date();
+        return selectedMonth.getMonth() === now.getMonth() &&
+            selectedMonth.getFullYear() === now.getFullYear();
     };
 
     const getDaysInMonth = (date: Date) => {
@@ -438,16 +447,18 @@ export default function Dashboard() {
                                 </span>
                                 <button
                                     onClick={() => changeMonth(1)}
+                                    disabled={isCurrentMonth()}
                                     style={{
                                         width: '36px',
                                         height: '36px',
                                         borderRadius: '50%',
-                                        backgroundColor: '#1E1E1E',
+                                        backgroundColor: isCurrentMonth() ? '#111' : '#1E1E1E',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         border: 'none',
-                                        cursor: 'pointer'
+                                        cursor: isCurrentMonth() ? 'not-allowed' : 'pointer',
+                                        opacity: isCurrentMonth() ? 0.5 : 1
                                     }}
                                 >
                                     <ChevronRight size={20} color="#888" />
