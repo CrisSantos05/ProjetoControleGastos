@@ -49,6 +49,11 @@ export default function AddExpense() {
     };
 
     const handleSave = async () => {
+        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+            alert('Erro: Variáveis de ambiente do Supabase não configuradas na Vercel.');
+            return;
+        }
+
         const floatAmount = parseFloat(amount.replace(',', '.'));
         if (isNaN(floatAmount) || floatAmount <= 0) return;
 
@@ -120,34 +125,34 @@ export default function AddExpense() {
         .filter(cat => cat !== undefined);
 
     return (
-        <div style={{ padding: '24px', height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        <div style={{ padding: '24px', paddingBottom: '100px', display: 'flex', flexDirection: 'column', position: 'relative', backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <Link to="/" style={{ color: '#fff', display: 'flex', alignItems: 'center' }}>
+                <Link to="/" style={{ color: '#1F2937', display: 'flex', alignItems: 'center' }}>
                     <ChevronLeft size={24} />
                 </Link>
-                <h1 style={{ fontSize: '18px', fontWeight: 600 }}>Categorias de Despesa</h1>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <h1 style={{ fontSize: '18px', fontWeight: 600, color: '#1F2937' }}>Categorias de Despesa</h1>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span>👤</span>
                 </div>
             </div>
 
             <div style={{ marginBottom: '32px' }}>
-                <div style={{ color: '#888', fontSize: '14px' }}>Total Gasto</div>
+                <div style={{ color: '#6B7280', fontSize: '14px' }}>Total Gasto</div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ fontSize: '24px', fontWeight: 700 }}>R$ 3.240,50</div>
-                    <div style={{ backgroundColor: '#1E1E1E', color: '#00d09c', fontSize: '12px', padding: '4px 12px', borderRadius: '12px' }}>
+                    <div style={{ fontSize: '24px', fontWeight: 700, color: '#1F2937' }}>R$ 3.240,50</div>
+                    <div style={{ backgroundColor: '#F3F4F6', color: '#00d09c', fontSize: '12px', padding: '4px 12px', borderRadius: '12px' }}>
                         12% do orçamento
                     </div>
                 </div>
-                <div style={{ height: '4px', backgroundColor: '#333', marginTop: '8px', borderRadius: '2px', overflow: 'hidden' }}>
+                <div style={{ height: '4px', backgroundColor: '#F3F4F6', marginTop: '8px', borderRadius: '2px', overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: '12%', backgroundColor: '#00d09c' }} />
                 </div>
             </div>
 
             <div style={{ marginBottom: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <span style={{ fontWeight: 600 }}>Selecione a Categoria</span>
+                    <span style={{ fontWeight: 600, color: '#1F2937' }}>Selecione a Categoria</span>
                     <button
                         onClick={() => setShowAllCategories(true)}
                         style={{ color: '#00d09c', fontSize: '12px', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
@@ -169,8 +174,8 @@ export default function AddExpense() {
                                     gap: '8px',
                                     padding: '12px 20px',
                                     borderRadius: '16px',
-                                    backgroundColor: selectedCategory === cat.id ? cat.color : '#1E1E1E',
-                                    color: selectedCategory === cat.id ? '#fff' : '#888',
+                                    backgroundColor: selectedCategory === cat.id ? cat.color : '#F3F4F6',
+                                    color: selectedCategory === cat.id ? '#fff' : '#6B7280',
                                     transition: 'all 0.2s',
                                     minWidth: 'max-content',
                                     border: 'none',
@@ -186,8 +191,8 @@ export default function AddExpense() {
             </div>
 
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ margin: 'auto 0', fontSize: '48px', fontWeight: 700, display: 'flex', alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: '24px', marginTop: '8px', color: '#888', marginRight: '4px' }}>R$</span>
+                <div style={{ margin: 'auto 0', fontSize: '48px', fontWeight: 700, display: 'flex', alignItems: 'flex-start', color: '#1F2937' }}>
+                    <span style={{ fontSize: '24px', marginTop: '8px', color: '#6B7280', marginRight: '4px' }}>R$</span>
                     {amount}
                 </div>
 
@@ -206,7 +211,7 @@ export default function AddExpense() {
                                 height: '64px',
                                 fontSize: '24px',
                                 fontWeight: 600,
-                                color: key === 'back' ? '#ef4444' : '#fff',
+                                color: key === 'back' ? '#ef4444' : '#1F2937',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -232,10 +237,10 @@ export default function AddExpense() {
                         style={{
                             width: '100%',
                             padding: '12px',
-                            backgroundColor: '#1E1E1E',
-                            border: '1px solid #333',
+                            backgroundColor: '#F3F4F6',
+                            border: '1px solid #E5E7EB',
                             borderRadius: '12px',
-                            color: '#fff',
+                            color: '#1F2937',
                             fontSize: '14px',
                             outline: 'none',
                             cursor: 'pointer'
@@ -253,10 +258,10 @@ export default function AddExpense() {
                             style={{
                                 width: '100%',
                                 padding: '12px',
-                                backgroundColor: '#1E1E1E',
-                                border: '1px solid #333',
+                                backgroundColor: '#F3F4F6',
+                                border: '1px solid #E5E7EB',
                                 borderRadius: '12px',
-                                color: '#fff',
+                                color: '#1F2937',
                                 fontSize: '14px',
                                 textAlign: 'center',
                                 outline: 'none'
@@ -278,10 +283,10 @@ export default function AddExpense() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '8px',
-                        backgroundColor: photoName ? '#00d09c20' : '#1E1E1E',
+                        backgroundColor: photoName ? '#00d09c20' : '#F3F4F6',
                         borderRadius: '16px',
                         border: photoName ? '1px solid #00d09c' : 'none',
-                        color: photoName ? '#00d09c' : '#888',
+                        color: photoName ? '#00d09c' : '#6B7280',
                         cursor: 'pointer',
                         fontSize: '14px',
                         fontWeight: 600,
@@ -389,7 +394,7 @@ export default function AddExpense() {
                                     width: '40px',
                                     height: '40px',
                                     borderRadius: '50%',
-                                    backgroundColor: '#1E1E1E',
+                                    backgroundColor: '#F3F4F6',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -397,7 +402,7 @@ export default function AddExpense() {
                                     cursor: 'pointer'
                                 }}
                             >
-                                <X size={20} color="#fff" />
+                                <X size={20} color="#1F2937" />
                             </button>
                         </div>
 
@@ -417,8 +422,8 @@ export default function AddExpense() {
                                         gap: '12px',
                                         padding: '16px 20px',
                                         borderRadius: '16px',
-                                        backgroundColor: selectedCategory === cat.id ? cat.color : '#1E1E1E',
-                                        color: selectedCategory === cat.id ? '#fff' : '#888',
+                                        backgroundColor: selectedCategory === cat.id ? cat.color : '#F3F4F6',
+                                        color: selectedCategory === cat.id ? '#fff' : '#6B7280',
                                         border: 'none',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s',
@@ -476,11 +481,12 @@ export default function AddExpense() {
                     padding: '24px'
                 }}>
                     <div style={{
-                        backgroundColor: '#1E1E1E',
+                        backgroundColor: '#FFFFFF',
                         borderRadius: '24px',
                         padding: '24px',
                         maxWidth: '400px',
-                        width: '100%'
+                        width: '100%',
+                        border: '1px solid #E5E7EB'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                             <h2 style={{ fontSize: '18px', fontWeight: 700 }}>Selecionar Data de Vencimento</h2>
