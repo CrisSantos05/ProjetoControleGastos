@@ -69,11 +69,17 @@ export default function AddExpense() {
                     name: newCategoryName,
                     icon: 'PlusCircle',
                     color: newCategoryColor,
-                    user_id: userData.user?.id || '47561d55-42e9-46b5-8abe-e912bbd102aa' // Fallback for dev
+                    user_id: userData.user?.id || '47561d55-42e9-46b5-8abe-e912bbd102aa'
                 })
                 .select()
                 .single();
-            if (error) throw error;
+
+            if (error) {
+                console.error('Supabase error adding category:', error);
+                alert('Erro ao adicionar categoria: ' + error.message);
+                return;
+            }
+
             if (data) {
                 setCategories(prev => [...prev, data]);
                 setSelectedCategory(data.id);
@@ -81,8 +87,8 @@ export default function AddExpense() {
                 setNewCategoryName('');
             }
         } catch (error) {
-            console.error('Error adding category:', error);
-            alert('Erro ao adicionar categoria');
+            console.error('Catch error adding category:', error);
+            alert('Falha ao processar categoria');
         }
     };
 
