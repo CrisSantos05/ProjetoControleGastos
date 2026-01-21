@@ -119,7 +119,6 @@ export default function Dashboard() {
     };
 
     return (
-    return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#FFFFFF', overflow: 'hidden' }}>
             {/* Header and Summary Card (Fixed) */}
             <div style={{ padding: '24px', paddingBottom: '0' }}>
@@ -154,101 +153,101 @@ export default function Dashboard() {
                         <span>Restante: R$ {(totalSpent - totalPaid).toFixed(2).replace('.', ',')}</span>
                     </div>
                 </div>
+            </div>
 
-                {/* Expense List (Scrollable) */}
-                <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px 120px 24px' }}>
+            {/* Expense List (Scrollable) */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px 120px 24px' }}>
 
-                    {/* Expense List */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#1F2937', marginBottom: '4px' }}>Meus Gastos</h2>
+                {/* Expense List */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#1F2937', marginBottom: '4px' }}>Meus Gastos</h2>
 
-                        {loading ? (
-                            <div style={{ textAlign: 'center', padding: '40px', color: '#6B7280' }}>Carregando...</div>
-                        ) : expenses.length === 0 ? (
-                            <div style={{ textAlign: 'center', padding: '40px', color: '#6B7280', backgroundColor: '#F9FAFB', borderRadius: '16px' }}>
-                                Nenhum gasto registrado neste mês.
-                            </div>
-                        ) : expenses.map((expense) => {
-                            const status = getStatusInfo(expense);
-                            const StatusIcon = status.icon;
-                            const CategoryIcon = iconMap[expense.category.icon] || CreditCard;
+                    {loading ? (
+                        <div style={{ textAlign: 'center', padding: '40px', color: '#6B7280' }}>Carregando...</div>
+                    ) : expenses.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '40px', color: '#6B7280', backgroundColor: '#F9FAFB', borderRadius: '16px' }}>
+                            Nenhum gasto registrado neste mês.
+                        </div>
+                    ) : expenses.map((expense) => {
+                        const status = getStatusInfo(expense);
+                        const StatusIcon = status.icon;
+                        const CategoryIcon = iconMap[expense.category.icon] || CreditCard;
 
-                            return (
-                                <div key={expense.id} style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    padding: '16px',
-                                    backgroundColor: '#F9FAFB',
-                                    borderRadius: '20px',
-                                    border: '1px solid #F3F4F6'
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                        <div style={{
-                                            width: '48px',
-                                            height: '48px',
-                                            borderRadius: '16px',
-                                            backgroundColor: `${expense.category.color}15`,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}>
-                                            <CategoryIcon size={24} color={expense.category.color} />
-                                        </div>
-                                        <div>
-                                            <div style={{
-                                                fontWeight: 600,
-                                                fontSize: '15px',
-                                                color: '#1F2937',
-                                                lineHeight: '1.2',
-                                                display: 'flex',
-                                                flexWrap: 'wrap',
-                                                alignItems: 'center'
-                                            }}>
-                                                {expense.category.name}
-                                                {expense.total_installments && expense.total_installments > 1 && (
-                                                    <span style={{ fontSize: '11px', color: '#6B7280', marginLeft: '6px' }}>
-                                                        ({expense.current_installment}/{expense.total_installments})
-                                                    </span>
-                                                )}
-                                                {expense.is_fixed && (
-                                                    <span style={{ fontSize: '10px', color: '#3b82f6', backgroundColor: '#3b82f615', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px' }}>FIXA</span>
-                                                )}
-                                            </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                <StatusIcon size={12} color={status.color} />
-                                                <span style={{ fontSize: '11px', fontWeight: 700, color: status.color }}>{status.label}</span>
-                                            </div>
-                                        </div>
+                        return (
+                            <div key={expense.id} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '16px',
+                                backgroundColor: '#F9FAFB',
+                                borderRadius: '20px',
+                                border: '1px solid #F3F4F6'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                    <div style={{
+                                        width: '48px',
+                                        height: '48px',
+                                        borderRadius: '16px',
+                                        backgroundColor: `${expense.category.color}15`,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <CategoryIcon size={24} color={expense.category.color} />
                                     </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
-                                        <div style={{ fontWeight: 700, fontSize: '15px', color: expense.paid ? '#9CA3AF' : '#1F2937', textDecoration: expense.paid ? 'line-through' : 'none' }}>
-                                            R$ {expense.amount.toFixed(2).replace('.', ',')}
+                                    <div>
+                                        <div style={{
+                                            fontWeight: 600,
+                                            fontSize: '15px',
+                                            color: '#1F2937',
+                                            lineHeight: '1.2',
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            alignItems: 'center'
+                                        }}>
+                                            {expense.category.name}
+                                            {expense.total_installments && expense.total_installments > 1 && (
+                                                <span style={{ fontSize: '11px', color: '#6B7280', marginLeft: '6px' }}>
+                                                    ({expense.current_installment}/{expense.total_installments})
+                                                </span>
+                                            )}
+                                            {expense.is_fixed && (
+                                                <span style={{ fontSize: '10px', color: '#3b82f6', backgroundColor: '#3b82f615', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px' }}>FIXA</span>
+                                            )}
                                         </div>
-                                        {!expense.paid && (
-                                            <button
-                                                onClick={() => handleMarkAsPaid(expense.id)}
-                                                style={{
-                                                    padding: '6px 14px',
-                                                    backgroundColor: '#00d09c',
-                                                    color: '#000',
-                                                    border: 'none',
-                                                    borderRadius: '10px',
-                                                    fontSize: '11px',
-                                                    fontWeight: 700,
-                                                    cursor: 'pointer'
-                                                }}
-                                            >
-                                                PAGAR
-                                            </button>
-                                        )}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <StatusIcon size={12} color={status.color} />
+                                            <span style={{ fontSize: '11px', fontWeight: 700, color: status.color }}>{status.label}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            );
-                        })}
-                })}
-                    </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+                                    <div style={{ fontWeight: 700, fontSize: '15px', color: expense.paid ? '#9CA3AF' : '#1F2937', textDecoration: expense.paid ? 'line-through' : 'none' }}>
+                                        R$ {expense.amount.toFixed(2).replace('.', ',')}
+                                    </div>
+                                    {!expense.paid && (
+                                        <button
+                                            onClick={() => handleMarkAsPaid(expense.id)}
+                                            style={{
+                                                padding: '6px 14px',
+                                                backgroundColor: '#00d09c',
+                                                color: '#000',
+                                                border: 'none',
+                                                borderRadius: '10px',
+                                                fontSize: '11px',
+                                                fontWeight: 700,
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            PAGAR
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-                );
+            </div>
+        </div>
+    );
 }
-
