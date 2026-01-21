@@ -48,6 +48,7 @@ export default function AddExpense() {
     const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
     const [editCategoryName, setEditCategoryName] = useState('');
     const [editCategoryColor, setEditCategoryColor] = useState('');
+    const [showManageCategoriesModal, setShowManageCategoriesModal] = useState(false);
 
     useEffect(() => {
         fetchCategories();
@@ -293,101 +294,56 @@ export default function AddExpense() {
 
             {/* Category Selection */}
             <div style={{ marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                     <span style={{ fontWeight: 600, color: '#1F2937' }}>Categoria</span>
-                    <button
-                        onClick={() => setShowNewCategoryModal(true)}
-                        style={{ color: '#00d09c', fontSize: '12px', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                    >
-                        <Plus size={14} /> Adicionar
-                    </button>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <button
+                            onClick={() => setShowManageCategoriesModal(true)}
+                            style={{ color: '#6B7280', fontSize: '12px', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        >
+                            <Zap size={14} /> Gerenciar
+                        </button>
+                        <button
+                            onClick={() => setShowNewCategoryModal(true)}
+                            style={{ color: '#00d09c', fontSize: '12px', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        >
+                            <Plus size={14} /> Adicionar
+                        </button>
+                    </div>
                 </div>
                 <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
                     {categories.map((cat) => {
                         const Icon = iconMap[cat.icon] || CreditCard;
                         return (
-                            <div key={cat.id} style={{ position: 'relative', minWidth: '80px' }}>
-                                <button
-                                    onClick={() => setSelectedCategory(cat.id)}
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        gap: '4px',
-                                        padding: '12px',
-                                        borderRadius: '16px',
-                                        backgroundColor: selectedCategory === cat.id ? cat.color : '#F3F4F6',
-                                        color: selectedCategory === cat.id ? '#fff' : '#6B7280',
-                                        width: '100%',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        minHeight: '80px'
-                                    }}
-                                >
-                                    <Icon size={20} />
-                                    <span style={{
-                                        fontSize: '11px',
-                                        fontWeight: 600,
-                                        textAlign: 'center',
-                                        wordBreak: 'break-word',
-                                        lineHeight: '1.2'
-                                    }}>{cat.name}</span>
-                                </button>
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '-4px',
-                                    right: '-4px',
+                            <button
+                                key={cat.id}
+                                onClick={() => setSelectedCategory(cat.id)}
+                                style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: '4px',
-                                    zIndex: 10
-                                }}>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setEditingCategory(cat);
-                                            setEditCategoryName(cat.name);
-                                            setEditCategoryColor(cat.color);
-                                            setShowEditCategoryModal(true);
-                                        }}
-                                        style={{
-                                            width: '20px',
-                                            height: '20px',
-                                            borderRadius: '50%',
-                                            backgroundColor: '#fff',
-                                            border: '1px solid #E5E7EB',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                        }}
-                                    >
-                                        <Zap size={10} color="#6B7280" />
-                                    </button>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteCategory(cat.id);
-                                        }}
-                                        style={{
-                                            width: '20px',
-                                            height: '20px',
-                                            borderRadius: '50%',
-                                            backgroundColor: '#fff',
-                                            border: '1px solid #E5E7EB',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                        }}
-                                    >
-                                        <X size={10} color="#ef4444" />
-                                    </button>
-                                </div>
-                            </div>
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    padding: '12px',
+                                    borderRadius: '16px',
+                                    backgroundColor: selectedCategory === cat.id ? cat.color : '#F3F4F6',
+                                    color: selectedCategory === cat.id ? '#fff' : '#6B7280',
+                                    minWidth: '90px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    minHeight: '85px',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Icon size={24} />
+                                <span style={{
+                                    fontSize: '11px',
+                                    fontWeight: 600,
+                                    textAlign: 'center',
+                                    wordBreak: 'break-word',
+                                    lineHeight: '1.2'
+                                }}>{cat.name}</span>
+                            </button>
                         );
                     })}
                 </div>
@@ -576,6 +532,94 @@ export default function AddExpense() {
                         >
                             Criar Categoria
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Category Modal */}
+            {showEditCategoryModal && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+                    <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', width: '100%', maxWidth: '400px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
+                            <h2 style={{ fontWeight: 700 }}>Editar Categoria</h2>
+                            <button onClick={() => setShowEditCategoryModal(false)} style={{ border: 'none', background: 'none' }}><X size={24} /></button>
+                        </div>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B7280', marginBottom: '8px', display: 'block' }}>NOME DA CATEGORIA</label>
+                            <input
+                                type="text"
+                                value={editCategoryName}
+                                onChange={(e) => setEditCategoryName(e.target.value)}
+                                placeholder="Ex: Aluguel"
+                                style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid #E5E7EB', fontSize: '14px' }}
+                            />
+                        </div>
+                        <div style={{ marginBottom: '24px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: 600, color: '#6B7280', marginBottom: '8px', display: 'block' }}>COR</label>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                {['#00d09c', '#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'].map(color => (
+                                    <button
+                                        key={color}
+                                        onClick={() => setEditCategoryColor(color)}
+                                        style={{
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '50%',
+                                            backgroundColor: color,
+                                            border: editCategoryColor === color ? '3px solid #000' : 'none',
+                                            cursor: 'pointer'
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleUpdateCategory}
+                            style={{ width: '100%', padding: '16px', backgroundColor: '#00d09c', color: '#000', fontWeight: 700, borderRadius: '16px', border: 'none', cursor: 'pointer' }}
+                        >
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Manage Categories Modal */}
+            {showManageCategoriesModal && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+                    <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '24px', width: '100%', maxWidth: '400px', maxHeight: '80vh', overflowY: 'auto' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 1 }}>
+                            <h2 style={{ fontWeight: 700 }}>Gerenciar Categorias</h2>
+                            <button onClick={() => setShowManageCategoriesModal(false)} style={{ border: 'none', background: 'none' }}><X size={24} /></button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {categories.map((cat) => (
+                                <div key={cat.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', backgroundColor: '#F9FAFB', borderRadius: '12px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: cat.color }} />
+                                        <span style={{ fontWeight: 600 }}>{cat.name}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <button
+                                            onClick={() => {
+                                                setEditingCategory(cat);
+                                                setEditCategoryName(cat.name);
+                                                setEditCategoryColor(cat.color);
+                                                setShowEditCategoryModal(true);
+                                            }}
+                                            style={{ color: '#6B7280', fontSize: '12px', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+                                        >
+                                            Editar
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteCategory(cat.id)}
+                                            style={{ color: '#ef4444', fontSize: '12px', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+                                        >
+                                            Excluir
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
