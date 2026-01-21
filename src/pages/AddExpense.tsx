@@ -483,7 +483,15 @@ export default function AddExpense() {
                             type="date"
                             value={dueDate}
                             onChange={(e) => { setDueDate(e.target.value); setShowCalendar(false); }}
-                            style={{ width: '100%', padding: '16px', borderRadius: '12px', border: '1px solid #E5E7EB', fontSize: '16px' }}
+                            style={{
+                                width: '100%',
+                                padding: '16px',
+                                borderRadius: '12px',
+                                border: '1px solid #E5E7EB',
+                                fontSize: '16px',
+                                boxSizing: 'border-box',
+                                display: 'block'
+                            }}
                         />
                     </div>
                 </div>
