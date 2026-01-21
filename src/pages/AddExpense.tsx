@@ -255,7 +255,13 @@ export default function AddExpense() {
                                 }}
                             >
                                 <Icon size={20} />
-                                <span style={{ fontSize: '11px', fontWeight: 600, whiteSpace: 'nowrap' }}>{cat.name}</span>
+                                <span style={{
+                                    fontSize: '11px',
+                                    fontWeight: 600,
+                                    textAlign: 'center',
+                                    wordBreak: 'break-word',
+                                    lineHeight: '1.2'
+                                }}>{cat.name}</span>
                             </button>
                         );
                     })}

@@ -189,7 +189,15 @@ export default function Dashboard() {
                                     <CategoryIcon size={24} color={expense.category.color} />
                                 </div>
                                 <div>
-                                    <div style={{ fontWeight: 600, fontSize: '15px', color: '#1F2937' }}>
+                                    <div style={{
+                                        fontWeight: 600,
+                                        fontSize: '15px',
+                                        color: '#1F2937',
+                                        lineHeight: '1.2',
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        alignItems: 'center'
+                                    }}>
                                         {expense.category.name}
                                         {expense.total_installments && expense.total_installments > 1 && (
                                             <span style={{ fontSize: '11px', color: '#6B7280', marginLeft: '6px' }}>
