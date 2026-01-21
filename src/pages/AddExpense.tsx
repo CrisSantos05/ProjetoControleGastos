@@ -44,6 +44,10 @@ export default function AddExpense() {
     const [showNewCategoryModal, setShowNewCategoryModal] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryColor, setNewCategoryColor] = useState('#00d09c');
+    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+    const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+    const [editCategoryName, setEditCategoryName] = useState('');
+    const [editCategoryColor, setEditCategoryColor] = useState('');
 
     useEffect(() => {
         fetchCategories();
@@ -120,6 +124,72 @@ export default function AddExpense() {
             } else {
                 alert('Falha ao processar categoria: ' + (error as any).message);
             }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUpdateCategory = async () => {
+        if (!editingCategory) return;
+        const trimmedName = editCategoryName.trim();
+        if (!trimmedName) {
+            alert('Por favor, informe um nome para a categoria.');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const { error } = await supabase
+                .from('categories')
+                .update({
+                    name: trimmedName,
+                    color: editCategoryColor
+                })
+                .eq('id', editingCategory.id);
+
+            if (error) throw error;
+
+            setCategories(prev => prev.map(cat =>
+                cat.id === editingCategory.id
+                    ? { ...cat, name: trimmedName, color: editCategoryColor }
+                    : cat
+            ));
+            setShowEditCategoryModal(false);
+            setEditingCategory(null);
+        } catch (error) {
+            console.error('Error updating category:', error);
+            alert('Erro ao atualizar categoria: ' + (error as any).message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteCategory = async (id: string) => {
+        if (!confirm('Tem certeza que deseja excluir esta categoria? Os gastos vinculados a ela poderão ser afetados.')) return;
+
+        try {
+            setLoading(true);
+            const { error } = await supabase
+                .from('categories')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                if (error.code === '23503') {
+                    alert('Não é possível excluir esta categoria pois existem gastos vinculados a ela. Exclua os gastos primeiro.');
+                } else {
+                    throw error;
+                }
+                return;
+            }
+
+            setCategories(prev => prev.filter(cat => cat.id !== id));
+            if (selectedCategory === id) {
+                setSelectedCategory(categories.find(c => c.id !== id)?.id || '');
+            }
+        } catch (error) {
+            console.error('Error deleting category:', error);
+            alert('Erro ao excluir categoria: ' + (error as any).message);
         } finally {
             setLoading(false);
         }
@@ -236,33 +306,88 @@ export default function AddExpense() {
                     {categories.map((cat) => {
                         const Icon = iconMap[cat.icon] || CreditCard;
                         return (
-                            <button
-                                key={cat.id}
-                                onClick={() => setSelectedCategory(cat.id)}
-                                style={{
+                            <div key={cat.id} style={{ position: 'relative', minWidth: '80px' }}>
+                                <button
+                                    onClick={() => setSelectedCategory(cat.id)}
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: '4px',
+                                        padding: '12px',
+                                        borderRadius: '16px',
+                                        backgroundColor: selectedCategory === cat.id ? cat.color : '#F3F4F6',
+                                        color: selectedCategory === cat.id ? '#fff' : '#6B7280',
+                                        width: '100%',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        minHeight: '80px'
+                                    }}
+                                >
+                                    <Icon size={20} />
+                                    <span style={{
+                                        fontSize: '11px',
+                                        fontWeight: 600,
+                                        textAlign: 'center',
+                                        wordBreak: 'break-word',
+                                        lineHeight: '1.2'
+                                    }}>{cat.name}</span>
+                                </button>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '-4px',
+                                    right: '-4px',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    alignItems: 'center',
                                     gap: '4px',
-                                    padding: '12px',
-                                    borderRadius: '16px',
-                                    backgroundColor: selectedCategory === cat.id ? cat.color : '#F3F4F6',
-                                    color: selectedCategory === cat.id ? '#fff' : '#6B7280',
-                                    minWidth: '80px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s'
-                                }}
-                            >
-                                <Icon size={20} />
-                                <span style={{
-                                    fontSize: '11px',
-                                    fontWeight: 600,
-                                    textAlign: 'center',
-                                    wordBreak: 'break-word',
-                                    lineHeight: '1.2'
-                                }}>{cat.name}</span>
-                            </button>
+                                    zIndex: 10
+                                }}>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingCategory(cat);
+                                            setEditCategoryName(cat.name);
+                                            setEditCategoryColor(cat.color);
+                                            setShowEditCategoryModal(true);
+                                        }}
+                                        style={{
+                                            width: '20px',
+                                            height: '20px',
+                                            borderRadius: '50%',
+                                            backgroundColor: '#fff',
+                                            border: '1px solid #E5E7EB',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        <Zap size={10} color="#6B7280" />
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteCategory(cat.id);
+                                        }}
+                                        style={{
+                                            width: '20px',
+                                            height: '20px',
+                                            borderRadius: '50%',
+                                            backgroundColor: '#fff',
+                                            border: '1px solid #E5E7EB',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        <X size={10} color="#ef4444" />
+                                    </button>
+                                </div>
+                            </div>
                         );
                     })}
                 </div>
