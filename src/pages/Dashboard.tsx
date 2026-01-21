@@ -246,7 +246,7 @@ export default function Dashboard() {
                     <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span style={{ fontSize: '14px' }}>👤</span>
                     </div>
-                    <span style={{ fontWeight: 600, color: '#1F2937' }}>Transações <span style={{ color: '#ef4444', fontSize: '10px' }}>v3.1.2-FINAL-TEST</span></span>
+                    <span style={{ fontWeight: 600, color: '#1F2937' }}>Transações <span style={{ color: '#ef4444', fontSize: '10px' }}>v3.1.4-PUBLIC</span></span>
                 </div>
                 <button
                     onClick={loadTransactions}
