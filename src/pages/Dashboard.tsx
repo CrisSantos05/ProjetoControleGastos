@@ -90,17 +90,21 @@ export default function Dashboard() {
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const dueDate = new Date(expense.due_date);
+
+        const [year, month, day] = expense.due_date.split('-').map(Number);
+        const dueDate = new Date(year, month - 1, day);
         dueDate.setHours(0, 0, 0, 0);
 
         const diffTime = dueDate.getTime() - today.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         if (diffDays === 0) return { label: 'VENCE HOJE', color: '#ef4444', icon: AlertCircle };
+        if (diffDays === 1) return { label: 'VENCE AMANHÃ', color: '#f59e0b', icon: Clock };
         if (diffDays === 2) return { label: 'VENCE EM 2 DIAS', color: '#f59e0b', icon: Clock };
         if (diffDays < 0) return { label: 'PENDENTE', color: '#ef4444', icon: AlertCircle };
 
-        return { label: `Vence dia ${dueDate.getDate()}`, color: '#6B7280', icon: Calendar };
+        const formattedDay = String(dueDate.getDate()).padStart(2, '0');
+        return { label: `Vence dia ${formattedDay}`, color: '#6B7280', icon: Calendar };
     };
 
     const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);

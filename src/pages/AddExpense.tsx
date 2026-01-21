@@ -28,7 +28,15 @@ export default function AddExpense() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [photoName, setPhotoName] = useState<string>('');
-    const [dueDate, setDueDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const getLocalDate = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const [dueDate, setDueDate] = useState<string>(getLocalDate());
     const [isFixed, setIsFixed] = useState(false);
     const [installments, setInstallments] = useState('1');
     const [loading, setLoading] = useState(false);
@@ -60,16 +68,35 @@ export default function AddExpense() {
     };
 
     const handleAddCategory = async () => {
-        if (!newCategoryName) return;
+        const trimmedName = newCategoryName.trim();
+        if (!trimmedName) {
+            alert('Por favor, informe um nome para a categoria.');
+            return;
+        }
+
         try {
-            const { data: userData } = await supabase.auth.getUser();
+            setLoading(true);
+
+            // Check for duplicate names (case insensitive)
+            const isDuplicate = categories.some(
+                cat => cat.name.toLowerCase() === trimmedName.toLowerCase()
+            );
+
+            if (isDuplicate) {
+                alert('Uma categoria com este nome já existe.');
+                return;
+            }
+
+            const { data: { user } } = await supabase.auth.getUser();
+            const userId = user?.id || '47561d55-42e9-46b5-8abe-e912bbd102aa';
+
             const { data, error } = await supabase
                 .from('categories')
                 .insert({
-                    name: newCategoryName,
+                    name: trimmedName,
                     icon: 'PlusCircle',
                     color: newCategoryColor,
-                    user_id: userData.user?.id || '47561d55-42e9-46b5-8abe-e912bbd102aa'
+                    user_id: userId
                 })
                 .select()
                 .single();
@@ -88,7 +115,13 @@ export default function AddExpense() {
             }
         } catch (error) {
             console.error('Catch error adding category:', error);
-            alert('Falha ao processar categoria');
+            if (error instanceof TypeError && error.message.includes('fetch')) {
+                alert('Erro de conexão: Verifique sua internet ou as credenciais do Supabase.');
+            } else {
+                alert('Falha ao processar categoria: ' + (error as any).message);
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -159,7 +192,11 @@ export default function AddExpense() {
             navigate('/');
         } catch (error) {
             console.error('Error saving expense:', error);
-            alert('Erro ao salvar despesa: ' + (error as any).message);
+            if (error instanceof TypeError && error.message.includes('fetch')) {
+                alert('Erro de conexão: Verifique sua conexão ou credenciais.');
+            } else {
+                alert('Erro ao salvar despesa: ' + (error as any).message);
+            }
         } finally {
             setLoading(false);
         }
@@ -245,7 +282,10 @@ export default function AddExpense() {
                             justifyContent: 'space-between'
                         }}
                     >
-                        {new Date(dueDate).toLocaleDateString('pt-BR')}
+                        {(() => {
+                            const [year, month, day] = dueDate.split('-').map(Number);
+                            return new Date(year, month - 1, day).toLocaleDateString('pt-BR');
+                        })()}
                         <Calendar size={18} color="#6B7280" />
                     </button>
                 </div>
