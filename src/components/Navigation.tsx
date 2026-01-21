@@ -1,4 +1,4 @@
-import { Home, BarChart2, Bell, Settings, Plus } from 'lucide-react';
+import { Home, Plus } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 
 export default function Navigation() {
@@ -36,11 +36,6 @@ export default function Navigation() {
                 <span>INÍCIO</span>
             </NavLink>
 
-            <NavLink to="/analytics" style={linkStyle}>
-                <BarChart2 size={24} />
-                <span>ESTATÍSTICAS</span>
-            </NavLink>
-
             <div style={{ position: 'relative', top: '-24px' }}>
                 <Link to="/add">
                     <button style={{
@@ -61,15 +56,8 @@ export default function Navigation() {
                 </Link>
             </div>
 
-            <NavLink to="/bills" style={linkStyle}>
-                <Bell size={24} />
-                <span>ALERTAS</span>
-            </NavLink>
+            <div style={{ width: '40px' }} /> {/* Spacer to keep layout balanced if needed, or just center them */}
 
-            <NavLink to="/settings" style={linkStyle}>
-                <Settings size={24} />
-                <span>CONFIG</span>
-            </NavLink>
         </nav>
     );
 }
