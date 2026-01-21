@@ -56,6 +56,7 @@ export default function Dashboard() {
                 `)
                 .gte('due_date', firstDay.split('T')[0])
                 .lte('due_date', lastDay.split('T')[0])
+                .order('paid', { ascending: true })
                 .order('due_date', { ascending: true });
 
             if (error) throw error;
@@ -78,7 +79,8 @@ export default function Dashboard() {
                 .eq('id', id);
 
             if (error) throw error;
-            setExpenses(prev => prev.map(e => e.id === id ? { ...e, paid: true } : e));
+            // Re-load expenses to maintain correct order and ensure consistency
+            loadExpenses();
         } catch (error) {
             console.error('Error updating payment:', error);
             alert('Erro ao confirmar pagamento');
