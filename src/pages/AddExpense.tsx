@@ -489,8 +489,12 @@ export default function AddExpense() {
                                 borderRadius: '12px',
                                 border: '1px solid #E5E7EB',
                                 fontSize: '16px',
+                                backgroundColor: '#F9FAFB',
+                                appearance: 'none',
+                                WebkitAppearance: 'none',
+                                display: 'block',
                                 boxSizing: 'border-box',
-                                display: 'block'
+                                textAlign: 'center'
                             }}
                         />
                     </div>
